@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin - Concesionaria</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 20px; }
+      nav { margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+      nav a { margin-right: 15px; }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong>Concesionaria Admin</strong>
+      <%= link_to "Vehículos", admin_vehicles_path %>
+      <%= link_to "Cerrar sesión", admin_logout_path, data: { turbo_method: :delete } %>
+    </nav>
+    <%= yield %>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 module Admin
   class VehiclesController < ApplicationController
+    layout "admin"
     before_action :require_seller!
     before_action :set_vehicle, only: %i[edit update destroy]
 
