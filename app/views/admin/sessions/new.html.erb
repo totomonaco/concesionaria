@@ -1,0 +1,17 @@
+<h1>Ingreso al Back-Office</h1>
+
+<% if @error %>
+  <p style="color: red;"><%= @error %></p>
+<% end %>
+
+<%= form_with url: admin_login_path, method: :post do |f| %>
+  <div>
+    <%= f.label :email %>
+    <%= f.text_field :email, name: :email %>
+  </div>
+  <div>
+    <%= f.label :password, "Contraseña" %>
+    <%= f.password_field :password, name: :password %>
+  </div>
+  <%= f.submit "Ingresar" %>
+<% end %>
