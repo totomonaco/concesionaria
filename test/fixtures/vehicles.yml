@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle_model: one
+  branch: one
+  year: 1
+  price: 9.99
+  km: 1
+  used: false
+  description: MyText
+
+two:
+  vehicle_model: two
+  branch: two
+  year: 1
+  price: 9.99
+  km: 1
+  used: false
+  description: MyText

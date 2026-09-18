@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  user: one
+  scheduled_date: 2026-09-17
+  scheduled_time: 2026-09-17 23:30:16
+  status: 1
+
+two:
+  vehicle: two
+  user: two
+  scheduled_date: 2026-09-17
+  scheduled_time: 2026-09-17 23:30:16
+  status: 1
