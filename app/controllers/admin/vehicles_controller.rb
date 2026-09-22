@@ -5,7 +5,7 @@ module Admin
     before_action :set_vehicle, only: %i[edit update destroy]
 
     def index
-      @vehicles = Vehicle.includes(:vehicle_model, :branch).order(created_at: :desc)
+      @vehicles = Vehicle.includes(:vehicle_model).order(created_at: :desc)
     end
 
     def new
@@ -44,7 +44,7 @@ module Admin
     end
 
     def vehicle_params
-      params.require(:vehicle).permit(:vehicle_model_id, :branch_id, :year, :price, :km, :used, :description)
+      params.require(:vehicle).permit(:vehicle_model_id, :year, :price, :km, :used, :description)
     end
 
     def current_admin_user

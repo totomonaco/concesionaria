@@ -14,10 +14,6 @@
     <%= f.collection_select :vehicle_model_id, VehicleModel.includes(:brand), :id,
           ->(m) { "#{m.brand.name} #{m.name}" }, include_blank: true %>
   </div>
-  <div>
-    <%= f.label :branch_id, "Sucursal" %>
-    <%= f.collection_select :branch_id, Branch.all, :id, :name, include_blank: true %>
-  </div>
   <div><%= f.label :year, "Año" %> <%= f.number_field :year %></div>
   <div><%= f.label :price, "Precio" %> <%= f.number_field :price, step: 0.01 %></div>
   <div><%= f.label :km, "Kilometraje" %> <%= f.number_field :km %></div>

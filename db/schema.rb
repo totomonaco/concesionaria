@@ -10,14 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_17_233016) do
-  create_table "branches", force: :cascade do |t|
-    t.string "address"
-    t.datetime "created_at", null: false
-    t.string "name"
-    t.datetime "updated_at", null: false
-  end
-
+ActiveRecord::Schema[8.1].define(version: 2026_09_18_120000) do
   create_table "brands", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
@@ -54,7 +47,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_233016) do
   end
 
   create_table "vehicles", force: :cascade do |t|
-    t.integer "branch_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
     t.integer "km"
@@ -63,13 +55,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_17_233016) do
     t.boolean "used"
     t.integer "vehicle_model_id", null: false
     t.integer "year"
-    t.index ["branch_id"], name: "index_vehicles_on_branch_id"
     t.index ["vehicle_model_id"], name: "index_vehicles_on_vehicle_model_id"
   end
 
   add_foreign_key "test_drives", "users"
   add_foreign_key "test_drives", "vehicles"
   add_foreign_key "vehicle_models", "brands"
-  add_foreign_key "vehicles", "branches"
   add_foreign_key "vehicles", "vehicle_models"
 end

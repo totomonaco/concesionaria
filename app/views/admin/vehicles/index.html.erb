@@ -9,7 +9,7 @@
 <table border="1" cellpadding="6" style="margin-top: 10px; border-collapse: collapse;">
   <thead>
     <tr>
-      <th>Modelo</th><th>Marca</th><th>Año</th><th>Precio</th><th>Km</th><th>Sucursal</th><th>Acciones</th>
+      <th>Modelo</th><th>Marca</th><th>Año</th><th>Precio</th><th>Km</th><th>Acciones</th>
     </tr>
   </thead>
   <tbody>
@@ -20,7 +20,6 @@
         <td><%= vehicle.year %></td>
         <td>$<%= vehicle.price %></td>
         <td><%= vehicle.km %></td>
-        <td><%= vehicle.branch.name %></td>
         <td>
           <%= link_to "Editar", edit_admin_vehicle_path(vehicle) %>
           <%= link_to "Borrar", admin_vehicle_path(vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Seguro?" } %>

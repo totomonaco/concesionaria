@@ -2,7 +2,6 @@
 
 one:
   vehicle_model: one
-  branch: one
   year: 1
   price: 9.99
   km: 1
@@ -11,7 +10,6 @@ one:
 
 two:
   vehicle_model: two
-  branch: two
   year: 1
   price: 9.99
   km: 1
