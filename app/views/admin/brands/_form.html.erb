@@ -1,0 +1,18 @@
+<%= form_with model: [:admin, brand] do |f| %>
+  <% if brand.errors.any? %>
+    <div style="color: red;">
+      <ul>
+        <% brand.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div style="margin-bottom: 15px;">
+    <%= f.label :name, "Nombre de la Marca" %><br>
+    <%= f.text_field :name, placeholder: "Ej: Toyota, Ford, etc." %>
+  </div>
+
+  <%= f.submit "Guardar Marca" %>
+<% end %>

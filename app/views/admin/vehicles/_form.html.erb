@@ -9,16 +9,105 @@
     </div>
   <% end %>
 
-  <div>
-    <%= f.label :vehicle_model_id, "Modelo" %>
-    <%= f.collection_select :vehicle_model_id, VehicleModel.includes(:brand), :id,
-          ->(m) { "#{m.brand.name} #{m.name}" }, include_blank: true %>
+  <div style="margin-bottom: 10px;">
+    <label for="brand_select">Marca</label>
+    <select id="brand_select" style="margin-left: 5px;">
+      <option value="">Seleccionar marca...</option>
+      <% Brand.order(:name).each do |brand| %>
+        <option value="<%= brand.id %>" <%= 'selected' if vehicle.vehicle_model&.brand_id == brand.id %>><%= brand.name %></option>
+      <% end %>
+    </select>
   </div>
+
+  <div style="margin-bottom: 10px;">
+    <%= f.label :vehicle_model_id, "Modelo" %>
+    <%= f.select :vehicle_model_id, 
+          options_for_select(
+            VehicleModel.order(:name).map { |m| [m.name, m.id, { 'data-brand-id' => m.brand_id }] },
+            vehicle.vehicle_model_id
+          ),
+          { include_blank: "Seleccionar modelo..." },
+          { id: "vehicle_model_select", style: "margin-left: 5px;" } %>
+  </div>
+
+  <script>
+    (function() {
+      function initBrandModelFilter() {
+        const brandSelect = document.getElementById("brand_select");
+        const modelSelect = document.getElementById("vehicle_model_select");
+        if (!brandSelect || !modelSelect) return;
+
+        if (!modelSelect.allOptions) {
+          modelSelect.allOptions = Array.from(modelSelect.querySelectorAll("option"));
+        }
+
+        function updateModels() {
+          const selectedBrandId = brandSelect.value;
+          const currentVal = modelSelect.value;
+
+          modelSelect.innerHTML = "";
+
+          modelSelect.allOptions.forEach(option => {
+            const brandId = option.getAttribute("data-brand-id");
+            if (!option.value || (selectedBrandId && brandId === selectedBrandId)) {
+              modelSelect.appendChild(option.cloneNode(true));
+            }
+          });
+
+          if (currentVal && modelSelect.querySelector(`option[value="${currentVal}"]`)) {
+            modelSelect.value = currentVal;
+          } else {
+            modelSelect.value = "";
+          }
+        }
+
+        brandSelect.addEventListener("change", updateModels);
+        updateModels();
+      }
+
+      document.addEventListener("turbo:load", initBrandModelFilter);
+      document.addEventListener("DOMContentLoaded", initBrandModelFilter);
+      initBrandModelFilter();
+    })();
+  </script>
   <div><%= f.label :year, "Año" %> <%= f.number_field :year %></div>
-  <div><%= f.label :price, "Precio" %> <%= f.number_field :price, step: 0.01 %></div>
-  <div><%= f.label :km, "Kilometraje" %> <%= f.number_field :km %></div>
+  <div style="margin-bottom: 10px;">
+    <%= f.label :currency, "Moneda" %>
+    <%= f.select :currency, [["Pesos (ARS $)", "ars"], ["Dólares (USD $)", "usd"]], {}, { style: "margin-left: 5px;" } %>
+  </div>
+  <div style="margin-bottom: 10px;">
+    <%= f.label :price, "Precio" %> 
+    <%= f.text_field :price, 
+          value: (vehicle.price ? (vehicle.price % 1 == 0 ? number_with_delimiter(vehicle.price.to_i, delimiter: ".") : number_with_precision(vehicle.price, precision: 2, delimiter: ".", separator: ",")) : ""), 
+          id: "vehicle_price_input", 
+          placeholder: "Ej: 23.000.000 o 25.000" %>
+  </div>
+  <div>
+    <%= f.label :km, "Kilometraje" %> 
+    <%= f.text_field :km, 
+          value: (vehicle.km ? number_with_delimiter(vehicle.km, delimiter: ".") : ""), 
+          id: "vehicle_km_input", 
+          placeholder: "Ej: 120.000" %>
+  </div>
   <div><%= f.label :used, "Usado" %> <%= f.check_box :used %></div>
   <div><%= f.label :description, "Descripción" %> <%= f.text_area :description %></div>
+
+  <script>
+    (function() {
+      function sanitizeNumbersOnSubmit(e) {
+        const priceInput = document.getElementById("vehicle_price_input");
+        const kmInput = document.getElementById("vehicle_km_input");
+        if (priceInput && priceInput.value) {
+          priceInput.value = priceInput.value.replace(/\./g, "").replace(",", ".");
+        }
+        if (kmInput && kmInput.value) {
+          kmInput.value = kmInput.value.replace(/\./g, "").replace(",", ".");
+        }
+      }
+
+      document.addEventListener("submit", sanitizeNumbersOnSubmit, true);
+    })();
+  </script>
 
   <%= f.submit "Guardar" %>
 <% end %>

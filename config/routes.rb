@@ -18,5 +18,7 @@ Rails.application.routes.draw do
     delete "logout", to: "sessions#destroy"
 
     resources :vehicles
+    resources :brands
+    resources :vehicle_models
   end
 end

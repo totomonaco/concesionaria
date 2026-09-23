@@ -1,0 +1,34 @@
+es:
+  activerecord:
+    models:
+      brand: "Marca"
+      vehicle_model: "Modelo de vehículo"
+      vehicle: "Vehículo"
+      user: "Usuario"
+      test_drive: "Prueba de manejo"
+    attributes:
+      brand:
+        name: "Nombre"
+      vehicle_model:
+        name: "Nombre"
+        brand: "Marca"
+      vehicle:
+        vehicle_model: "Modelo"
+        year: "Año"
+        price: "Precio"
+        km: "Kilometraje"
+        used: "Usado"
+        description: "Descripción"
+      user:
+        name: "Nombre"
+        email: "Correo electrónico"
+        password: "Contraseña"
+    errors:
+      messages:
+        blank: "no puede estar en blanco"
+        taken: "ya está en uso"
+        invalid: "no es válido"
+        not_a_number: "debe ser un número"
+        greater_than: "debe ser mayor a %{count}"
+        greater_than_or_equal_to: "debe ser mayor o igual a %{count}"
+        less_than_or_equal_to: "debe ser menor o igual a %{count}"

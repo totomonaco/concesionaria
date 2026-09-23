@@ -1,28 +1,39 @@
 <h1>Vehículos</h1>
 
-<% if notice %>
-  <p style="color: green;"><%= notice %></p>
-<% end %>
-
 <%= link_to "+ Nuevo vehículo", new_admin_vehicle_path %>
 
 <table border="1" cellpadding="6" style="margin-top: 10px; border-collapse: collapse;">
   <thead>
     <tr>
-      <th>Modelo</th><th>Marca</th><th>Año</th><th>Precio</th><th>Km</th><th>Acciones</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Año</th>
+      <th>Precio</th>
+      <th>Km</th>
+      <th>Estado</th>
+      <th>Descripción</th>
+      <th>Acciones</th>
     </tr>
   </thead>
   <tbody>
     <% @vehicles.each do |vehicle| %>
       <tr>
-        <td><%= vehicle.vehicle_model.name %></td>
         <td><%= vehicle.vehicle_model.brand.name %></td>
+        <td><%= vehicle.vehicle_model.name %></td>
         <td><%= vehicle.year %></td>
-        <td>$<%= vehicle.price %></td>
-        <td><%= vehicle.km %></td>
+        <td><%= vehicle.formatted_price %></td>
+        <td><%= number_with_delimiter(vehicle.km, delimiter: ".") %> km</td>
         <td>
-          <%= link_to "Editar", edit_admin_vehicle_path(vehicle) %>
-          <%= link_to "Borrar", admin_vehicle_path(vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Seguro?" } %>
+          <% if vehicle.used? %>
+            <span style="color: #d97706; font-weight: bold;">Usado</span>
+          <% else %>
+            <span style="color: #059669; font-weight: bold;">Nuevo</span>
+          <% end %>
+        </td>
+        <td><%= truncate(vehicle.description, length: 40) %></td>
+        <td>
+          <%= link_to "Editar", edit_admin_vehicle_path(vehicle) %> |
+          <%= link_to "Borrar", admin_vehicle_path(vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés borrar este vehículo?" } %>
         </td>
       </tr>
     <% end %>

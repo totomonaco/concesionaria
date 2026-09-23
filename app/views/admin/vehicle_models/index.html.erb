@@ -1,0 +1,33 @@
+<h1>Modelos de Vehículos</h1>
+
+<%= link_to "+ Nuevo modelo", new_admin_vehicle_model_path %>
+
+<% @vehicle_models.group_by(&:brand).each do |brand, models| %>
+  <div style="margin-top: 25px;">
+    <h3 style="background-color: #f3f4f6; padding: 8px 12px; border-left: 4px solid #2563eb; margin-bottom: 10px;">
+      <%= brand.name %> <span style="font-size: 14px; font-weight: normal; color: #6b7280;">(<%= models.count %> modelos)</span>
+    </h3>
+
+    <table border="1" cellpadding="6" style="border-collapse: collapse; width: 100%; max-width: 600px;">
+      <thead>
+        <tr>
+          <th>Modelo</th>
+          <th>Vehículos en stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% models.each do |model| %>
+          <tr>
+            <td><strong><%= model.name %></strong></td>
+            <td><%= model.vehicles.count %> vehículos</td>
+            <td>
+              <%= link_to "Editar", edit_admin_vehicle_model_path(model) %> |
+              <%= link_to "Borrar", admin_vehicle_model_path(model), data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés borrar el modelo '#{model.name}'?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>

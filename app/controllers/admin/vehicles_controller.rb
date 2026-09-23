@@ -44,7 +44,7 @@ module Admin
     end
 
     def vehicle_params
-      params.require(:vehicle).permit(:vehicle_model_id, :year, :price, :km, :used, :description)
+      params.require(:vehicle).permit(:vehicle_model_id, :year, :price, :currency, :km, :used, :description)
     end
 
     def current_admin_user

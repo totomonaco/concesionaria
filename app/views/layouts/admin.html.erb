@@ -16,6 +16,8 @@
     <nav>
       <strong>Concesionaria Admin</strong>
       <%= link_to "Vehículos", admin_vehicles_path %>
+      <%= link_to "Marcas", admin_brands_path %>
+      <%= link_to "Modelos", admin_vehicle_models_path %>
       <%= link_to "Cerrar sesión", admin_logout_path, data: { turbo_method: :delete } %>
     </nav>
     <%= yield %>
