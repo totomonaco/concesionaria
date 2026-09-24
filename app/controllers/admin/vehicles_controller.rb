@@ -5,7 +5,7 @@ module Admin
     before_action :set_vehicle, only: %i[edit update destroy]
 
     def index
-      @vehicles = Vehicle.includes(:vehicle_model).order(created_at: :desc)
+      @vehicles = Vehicle.includes({ vehicle_model: :brand }, :test_drives).order(created_at: :desc)
     end
 
     def new

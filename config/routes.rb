@@ -1,3 +1,7 @@
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  inflect.irregular "test_drive", "test_drives"
+end
+
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -11,6 +15,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  # Solicitud pública de Test Drive para clientes
+  resources :test_drives, only: %i[new create show]
+
   namespace :admin do
     root "vehicles#index"
     get "login", to: "sessions#new"
@@ -20,5 +27,11 @@ Rails.application.routes.draw do
     resources :vehicles
     resources :brands
     resources :vehicle_models
+    resources :test_drives do
+      member do
+        patch :confirm
+        patch :cancel
+      end
+    end
   end
 end

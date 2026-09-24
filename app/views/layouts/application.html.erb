@@ -23,7 +23,17 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body style="font-family: Arial, sans-serif; margin: 20px; background-color: #f8fafc; color: #1e293b;">
+    <% if flash[:notice] %>
+      <div style="max-width: 600px; margin: 0 auto 20px auto; background-color: #d1fae5; color: #065f46; padding: 12px 16px; border-radius: 6px; border: 1px solid #a7f3d0;">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div style="max-width: 600px; margin: 0 auto 20px auto; background-color: #fee2e2; color: #991b1b; padding: 12px 16px; border-radius: 6px; border: 1px solid #fecaca;">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

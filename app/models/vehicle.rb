@@ -17,4 +17,12 @@ class Vehicle < ApplicationRecord
     amount = price ? (price % 1 == 0 ? price.to_i : price) : 0
     "#{symbol}#{ActiveSupport::NumberHelper.number_to_delimited(amount, delimiter: '.')}"
   end
+
+  def title
+    "#{vehicle_model.brand.name} #{vehicle_model.name} (#{year})"
+  end
+
+  def display_name
+    "#{title} - #{formatted_price}"
+  end
 end

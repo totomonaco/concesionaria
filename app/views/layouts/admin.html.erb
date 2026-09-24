@@ -18,8 +18,19 @@
       <%= link_to "Vehículos", admin_vehicles_path %>
       <%= link_to "Marcas", admin_brands_path %>
       <%= link_to "Modelos", admin_vehicle_models_path %>
+      <%= link_to "Test Drives", admin_test_drives_path %>
       <%= link_to "Cerrar sesión", admin_logout_path, data: { turbo_method: :delete } %>
     </nav>
+    <% if flash[:notice] %>
+      <div style="background-color: #d1fae5; color: #065f46; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #a7f3d0;">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+    <% if flash[:alert] %>
+      <div style="background-color: #fee2e2; color: #991b1b; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #fecaca;">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
     <%= yield %>
   </body>
 </html>

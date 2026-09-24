@@ -1,0 +1,79 @@
+<div style="max-width: 600px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid #e2e8f0;">
+  <div style="text-align: center; margin-bottom: 25px;">
+    <h1 style="margin: 0 0 8px 0; font-size: 24px; color: #0f172a;">Solicitar Test Drive</h1>
+    <p style="margin: 0; color: #64748b; font-size: 14px;">Completá el formulario para coordinar tu prueba de manejo con un asesor.</p>
+  </div>
+
+  <% if @test_drive.errors.any? %>
+    <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+      <strong style="display: block; margin-bottom: 5px;">Por favor corregí los siguientes errores:</strong>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% @test_drive.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @test_drive, url: test_drives_path, local: true do |f| %>
+    <!-- Selección o detalle del Vehículo -->
+    <div style="margin-bottom: 20px;">
+      <% if @vehicle %>
+        <%= f.hidden_field :vehicle_id, value: @vehicle.id %>
+        <div style="background-color: #f1f5f9; padding: 12px 15px; border-radius: 6px; border-left: 4px solid #2563eb;">
+          <span style="font-size: 12px; color: #64748b; font-weight: bold; text-transform: uppercase;">Vehículo seleccionado</span>
+          <div style="font-size: 18px; font-weight: bold; color: #1e293b; margin-top: 2px;">
+            <%= @vehicle.title %>
+          </div>
+          <div style="font-size: 14px; color: #059669; font-weight: bold; margin-top: 4px;">
+            <%= @vehicle.formatted_price %> • <%= @vehicle.used? ? "Usado (#{@vehicle.km} km)" : "0km" %>
+          </div>
+        </div>
+      <% else %>
+        <%= f.label :vehicle_id, "Seleccioná el vehículo de tu interés", style: "display: block; font-weight: bold; margin-bottom: 6px;" %>
+        <%= f.collection_select :vehicle_id,
+              Vehicle.includes(vehicle_model: :brand).order("brands.name ASC, vehicle_models.name ASC"),
+              :id, :display_name,
+              { prompt: "Elegir vehículo..." },
+              { required: true, style: "width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;" } %>
+      <% end %>
+    </div>
+
+    <!-- Datos del Cliente -->
+    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+      <div style="flex: 1;">
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;">Tu Nombre completo *</label>
+        <%= text_field_tag :customer_name, params[:customer_name], required: true, placeholder: "Ej: Juan Pérez",
+              style: "width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;" %>
+      </div>
+      <div style="flex: 1;">
+        <label style="display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;">Tu Email *</label>
+        <%= email_field_tag :customer_email, params[:customer_email], required: true, placeholder: "juan@ejemplo.com",
+              style: "width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;" %>
+      </div>
+    </div>
+
+    <!-- Fecha y Horario deseado -->
+    <div style="display: flex; gap: 15px; margin-bottom: 25px;">
+      <div style="flex: 1;">
+        <%= f.label :scheduled_date, "Fecha preferida *", style: "display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;" %>
+        <%= f.date_field :scheduled_date, min: Date.current, required: true,
+              style: "width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;" %>
+      </div>
+      <div style="flex: 1;">
+        <%= f.label :scheduled_time, "Horario preferido *", style: "display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;" %>
+        <%= f.time_field :scheduled_time, required: true,
+              style: "width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; box-sizing: border-box;" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.submit "Enviar Solicitud de Test Drive",
+            style: "width: 100%; background-color: #2563eb; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer;" %>
+    </div>
+  <% end %>
+
+  <div style="text-align: center; margin-top: 20px; font-size: 13px; color: #64748b;">
+    ¿Sos vendedor o administrador? <%= link_to "Ingresar al panel de gestión", admin_root_path, style: "color: #2563eb; text-decoration: none;" %>
+  </div>
+</div>

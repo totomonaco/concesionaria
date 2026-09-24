@@ -1,0 +1,109 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+  <h1 style="margin: 0;">Gestión de Test Drives</h1>
+  <%= link_to "+ Agendar nuevo Test Drive", new_admin_test_drive_path, style: "background-color: #2563eb; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-weight: bold;" %>
+</div>
+
+<!-- Filtros por estado -->
+<div style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+  <span style="font-weight: bold; margin-right: 5px;">Filtrar por estado:</span>
+  <% statuses = [
+       ["Todos", "all"],
+       ["Pendientes", "pending"],
+       ["Confirmados", "confirmed"],
+       ["Cancelados", "cancelled"]
+     ] %>
+  <% statuses.each do |label, val| %>
+    <% is_active = (@status == val) %>
+    <%= link_to label, admin_test_drives_path(status: val, vehicle_id: @vehicle_id),
+          style: "text-decoration: none; padding: 5px 12px; border-radius: 15px; font-size: 13px; font-weight: bold; border: 1px solid #d1d5db; #{is_active ? 'background-color: #1e293b; color: white; border-color: #1e293b;' : 'background-color: #f3f4f6; color: #374151;'}" %>
+  <% end %>
+
+  <% if @vehicle_id.present? %>
+    <span style="margin-left: 15px; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 4px; font-size: 13px;">
+      Filtrado por vehículo #<%= @vehicle_id %>
+      <%= link_to "(Quitar filtro de vehículo)", admin_test_drives_path(status: @status), style: "color: #0284c7; margin-left: 5px;" %>
+    </span>
+  <% end %>
+</div>
+
+<% if @test_drives.empty? %>
+  <div style="padding: 30px; text-align: center; background-color: #f9fafb; border: 1px dashed #d1d5db; border-radius: 6px; color: #6b7280;">
+    <p style="font-size: 16px; margin: 0 0 10px 0;">No se encontraron test drives para el filtro seleccionado.</p>
+    <%= link_to "+ Agendar un nuevo Test Drive", new_admin_test_drive_path, style: "color: #2563eb; font-weight: bold;" %>
+  </div>
+<% else %>
+  <table border="1" cellpadding="8" style="width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb; margin-top: 10px;">
+    <thead>
+      <tr style="background-color: #f8fafc; text-align: left;">
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">#</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Vehículo</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Cliente</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Fecha programada</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Hora</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Estado</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Cambiar Estado</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @test_drives.each do |td| %>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px; border: 1px solid #e2e8f0; color: #64748b;">#<%= td.id %></td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <strong><%= td.vehicle.vehicle_model.brand.name %> <%= td.vehicle.vehicle_model.name %></strong>
+            <div style="font-size: 12px; color: #64748b;">
+              Año <%= td.vehicle.year %> • <%= td.vehicle.formatted_price %>
+            </div>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <strong><%= td.user.name %></strong>
+            <div style="font-size: 12px; color: #64748b;"><%= td.user.email %></div>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <%= td.formatted_date %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: 500;">
+            <%= td.formatted_time %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <% case td.status %>
+            <% when "pending" %>
+              <span style="background-color: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+                Pendiente
+              </span>
+            <% when "confirmed" %>
+              <span style="background-color: #d1fae5; color: #047857; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+                Confirmado
+              </span>
+            <% when "cancelled" %>
+              <span style="background-color: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+                Cancelado
+              </span>
+            <% end %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <div style="display: flex; gap: 6px;">
+              <% unless td.confirmed? %>
+                <%= button_to "Confirmar", confirm_admin_test_drive_path(td, current_status: @status),
+                      method: :patch,
+                      style: "background-color: #10b981; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;" %>
+              <% end %>
+              <% unless td.cancelled? %>
+                <%= button_to "Cancelar", cancel_admin_test_drive_path(td, current_status: @status),
+                      method: :patch,
+                      data: { turbo_confirm: "¿Seguro que querés cancelar este test drive?" },
+                      style: "background-color: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: bold;" %>
+              <% end %>
+            </div>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; white-space: nowrap;">
+            <%= link_to "Editar", edit_admin_test_drive_path(td), style: "color: #2563eb; text-decoration: none;" %> |
+            <%= link_to "Borrar", admin_test_drive_path(td),
+                  data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés eliminar el registro del test drive?" },
+                  style: "color: #dc2626; text-decoration: none;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

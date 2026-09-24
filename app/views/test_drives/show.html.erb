@@ -1,0 +1,53 @@
+<div style="max-width: 600px; margin: 30px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; text-align: center;">
+  <div style="width: 60px; height: 60px; background-color: #d1fae5; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 15px auto;">
+    ✓
+  </div>
+
+  <h1 style="margin: 0 0 10px 0; font-size: 24px; color: #0f172a;">¡Solicitud Recibida!</h1>
+  <p style="margin: 0 0 25px 0; color: #64748b; font-size: 15px;">
+    Hemos recibido tu solicitud de Test Drive. Nuestro equipo comercial revisará la disponibilidad y te contactará para confirmar.
+  </p>
+
+  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; text-align: left; margin-bottom: 25px;">
+    <h3 style="margin: 0 0 15px 0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; color: #334155;">
+      Detalle del Turno Solicitado (#<%= @test_drive.id %>)
+    </h3>
+
+    <div style="display: grid; grid-template-columns: 140px 1fr; row-gap: 10px; font-size: 14px;">
+      <span style="color: #64748b; font-weight: bold;">Vehículo:</span>
+      <span style="color: #0f172a; font-weight: 500;"><%= @test_drive.vehicle.title %></span>
+
+      <span style="color: #64748b; font-weight: bold;">Fecha:</span>
+      <span style="color: #0f172a;"><%= @test_drive.formatted_date %></span>
+
+      <span style="color: #64748b; font-weight: bold;">Horario:</span>
+      <span style="color: #0f172a;"><%= @test_drive.formatted_time %></span>
+
+      <span style="color: #64748b; font-weight: bold;">Cliente:</span>
+      <span style="color: #0f172a;"><%= @test_drive.user.name %> (<%= @test_drive.user.email %>)</span>
+
+      <span style="color: #64748b; font-weight: bold;">Estado actual:</span>
+      <span>
+        <% case @test_drive.status %>
+        <% when "pending" %>
+          <span style="background-color: #fef3c7; color: #b45309; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">
+            Pendiente de confirmación
+          </span>
+        <% when "confirmed" %>
+          <span style="background-color: #d1fae5; color: #047857; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">
+            Confirmado
+          </span>
+        <% when "cancelled" %>
+          <span style="background-color: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold;">
+            Cancelado
+          </span>
+        <% end %>
+      </span>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 15px; justify-content: center;">
+    <%= link_to "Solicitar otro Test Drive", new_test_drive_path, style: "background-color: #2563eb; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: bold;" %>
+    <%= link_to "Ir al panel admin", admin_test_drives_path, style: "background-color: #f1f5f9; color: #334155; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; border: 1px solid #cbd5e1;" %>
+  </div>
+</div>
