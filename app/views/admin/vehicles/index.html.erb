@@ -10,7 +10,8 @@
       <th>Año</th>
       <th>Precio</th>
       <th>Km</th>
-      <th>Estado</th>
+      <th>Condición</th>
+      <th>Disponibilidad</th>
       <th>Descripción</th>
       <th>Test Drives</th>
       <th>Acciones</th>
@@ -31,7 +32,23 @@
             <span style="color: #059669; font-weight: bold;">Nuevo</span>
           <% end %>
         </td>
-        <td><%= truncate(vehicle.description, length: 40) %></td>
+        <td>
+          <% case vehicle.status %>
+          <% when "available" %>
+            <span style="background-color: #d1fae5; color: #047857; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+              Disponible
+            </span>
+          <% when "reserved" %>
+            <span style="background-color: #fef3c7; color: #b45309; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+              Reservado
+            </span>
+          <% when "sold" %>
+            <span style="background-color: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">
+              Vendido
+            </span>
+          <% end %>
+        </td>
+        <td><%= truncate(vehicle.description, length: 30) %></td>
         <td>
           <% td_count = vehicle.test_drives.size %>
           <% if td_count > 0 %>
@@ -39,11 +56,18 @@
           <% else %>
             <span style="color: #94a3b8; font-size: 13px;">Sin turnos</span>
           <% end %>
-          <div>
-            <%= link_to "+ Agendar", new_admin_test_drive_path(vehicle_id: vehicle.id), style: "font-size: 12px; color: #059669; text-decoration: none; font-weight: 500;" %>
-          </div>
+          <% unless vehicle.sold? %>
+            <div>
+              <%= link_to "+ Agendar", new_admin_test_drive_path(vehicle_id: vehicle.id), style: "font-size: 12px; color: #059669; text-decoration: none; font-weight: 500;" %>
+            </div>
+          <% end %>
         </td>
-        <td>
+        <td style="white-space: nowrap;">
+          <% if vehicle.sold? && vehicle.sale %>
+            <%= link_to "Ver Venta", admin_sale_path(vehicle.sale), style: "background-color: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; border: 1px solid #cbd5e1; margin-right: 5px;" %>
+          <% elsif !vehicle.sold? %>
+            <%= link_to "+ Vender", new_admin_sale_path(vehicle_id: vehicle.id), style: "background-color: #059669; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; margin-right: 5px;" %>
+          <% end %>
           <%= link_to "Editar", edit_admin_vehicle_path(vehicle) %> |
           <%= link_to "Borrar", admin_vehicle_path(vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés borrar este vehículo?" } %>
         </td>

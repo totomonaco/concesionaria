@@ -1,0 +1,89 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+  <h1 style="margin: 0;">Gestión de Ventas</h1>
+  <%= link_to "+ Registrar nueva Venta", new_admin_sale_path,
+        style: "background-color: #059669; color: white; padding: 9px 16px; text-decoration: none; border-radius: 4px; font-weight: bold;" %>
+</div>
+
+<!-- Tarjetas de Resumen Financiero y Métricas -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
+    <div style="font-size: 13px; color: #64748b; font-weight: bold; text-transform: uppercase;">Total de Ventas</div>
+    <div style="font-size: 26px; font-weight: bold; color: #1e293b; margin-top: 5px;"><%= @total_sales_count %></div>
+    <div style="font-size: 12px; color: #94a3b8; margin-top: 3px;">Operaciones registradas</div>
+  </div>
+
+  <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 15px;">
+    <div style="font-size: 13px; color: #166534; font-weight: bold; text-transform: uppercase;">Recaudación en Pesos</div>
+    <div style="font-size: 24px; font-weight: bold; color: #15803d; margin-top: 5px;">
+      ARS $ <%= number_with_delimiter((@total_ars % 1 == 0 ? @total_ars.to_i : @total_ars), delimiter: ".") %>
+    </div>
+  </div>
+
+  <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 15px;">
+    <div style="font-size: 13px; color: #1e40af; font-weight: bold; text-transform: uppercase;">Recaudación en Dólares</div>
+    <div style="font-size: 24px; font-weight: bold; color: #1d4ed8; margin-top: 5px;">
+      USD $ <%= number_with_delimiter((@total_usd % 1 == 0 ? @total_usd.to_i : @total_usd), delimiter: ".") %>
+    </div>
+  </div>
+</div>
+
+<% if @sales.empty? %>
+  <div style="padding: 40px; text-align: center; background-color: #f9fafb; border: 1px dashed #d1d5db; border-radius: 8px; color: #6b7280;">
+    <p style="font-size: 16px; margin: 0 0 10px 0;">Todavía no se han registrado ventas en la concesionaria.</p>
+    <%= link_to "+ Registrar la primera Venta", new_admin_sale_path, style: "color: #059669; font-weight: bold;" %>
+  </div>
+<% else %>
+  <table border="1" cellpadding="8" style="width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb;">
+    <thead>
+      <tr style="background-color: #f8fafc; text-align: left;">
+        <th style="padding: 10px; border: 1px solid #e2e8f0;"># Venta</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Vehículo</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Cliente</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Vendedor</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Precio de Venta</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Medio de Pago</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Fecha</th>
+        <th style="padding: 10px; border: 1px solid #e2e8f0;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @sales.each do |sale| %>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; color: #64748b;">
+            #<%= sale.id %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <strong><%= sale.vehicle.title %></strong>
+            <div style="font-size: 12px; color: #64748b;">
+              <%= sale.vehicle.used? ? "Usado (#{number_with_delimiter(sale.vehicle.km, delimiter: '.')} km)" : "0km" %>
+            </div>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <strong><%= sale.customer.name %></strong>
+            <div style="font-size: 12px; color: #64748b;"><%= sale.customer.email %></div>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <%= sale.seller.name %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; font-weight: bold; color: #047857; font-size: 15px;">
+            <%= sale.formatted_price %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <span style="background-color: #f1f5f9; padding: 3px 8px; border-radius: 4px; font-size: 12px; color: #334155; font-weight: 500;">
+              <%= sale.payment_method_name %>
+            </span>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0;">
+            <%= sale.formatted_date %>
+          </td>
+          <td style="padding: 10px; border: 1px solid #e2e8f0; white-space: nowrap;">
+            <%= link_to "Ver Comprobante", admin_sale_path(sale), style: "color: #2563eb; text-decoration: none; font-weight: 500;" %> |
+            <%= link_to "Anular Venta", admin_sale_path(sale),
+                  data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de anular esta venta? El auto volverá a figurar como Disponible." },
+                  style: "color: #dc2626; text-decoration: none; font-size: 12px;" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

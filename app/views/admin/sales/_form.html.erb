@@ -1,0 +1,109 @@
+<%= form_with model: [:admin, sale], local: true do |f| %>
+  <% if sale.errors.any? %>
+    <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+      <strong style="display: block; margin-bottom: 5px;">Se encontraron los siguientes errores:</strong>
+      <ul style="margin: 0; padding-left: 20px;">
+        <% sale.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Selección de Vehículo -->
+  <div style="margin-bottom: 20px;">
+    <% if @vehicle %>
+      <%= f.hidden_field :vehicle_id, value: @vehicle.id %>
+      <div style="background-color: #f1f5f9; padding: 14px; border-radius: 6px; border-left: 4px solid #059669; max-width: 550px;">
+        <span style="font-size: 11px; color: #64748b; font-weight: bold; text-transform: uppercase;">Vehículo a vender</span>
+        <div style="font-size: 18px; font-weight: bold; color: #0f172a; margin-top: 2px;">
+          <%= @vehicle.title %>
+        </div>
+        <div style="font-size: 13px; color: #475569; margin-top: 4px;">
+          Precio de lista: <strong><%= @vehicle.formatted_price %></strong> • <%= @vehicle.used? ? "Usado (#{@vehicle.km} km)" : "0km" %>
+        </div>
+      </div>
+    <% else %>
+      <%= f.label :vehicle_id, "Seleccionar Vehículo en Stock *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+      <%= f.collection_select :vehicle_id,
+            Vehicle.available_for_sale.includes(vehicle_model: :brand).order("brands.name ASC, vehicle_models.name ASC"),
+            :id, :display_name,
+            { prompt: "Elegir vehículo disponible..." },
+            { required: true, style: "width: 100%; max-width: 550px; padding: 8px 10px;" } %>
+      <div style="font-size: 12px; color: #64748b; margin-top: 3px;">Solo se muestran los vehículos disponibles en stock (no vendidos).</div>
+    <% end %>
+  </div>
+
+  <!-- Selección o Carga de Cliente -->
+  <div style="margin-bottom: 20px; border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; max-width: 550px; background-color: #f8fafc;">
+    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Cliente Comprador</label>
+
+    <div style="margin-bottom: 10px;">
+      <label style="display: block; font-size: 13px; color: #475569; margin-bottom: 3px;">Seleccionar cliente registrado:</label>
+      <%= f.collection_select :customer_id,
+            User.order(:name),
+            :id, :display_name,
+            { prompt: "Elegir cliente..." },
+            { style: "width: 100%; padding: 6px 10px;" } %>
+    </div>
+
+    <div style="text-align: center; margin: 10px 0; font-size: 12px; color: #64748b; font-weight: bold;">
+      — O CARGAR NUEVO CLIENTE RÁPIDO —
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+      <div style="flex: 1;">
+        <label style="display: block; font-size: 13px; color: #475569; margin-bottom: 3px;">Nombre completo:</label>
+        <%= text_field_tag :new_customer_name, params[:new_customer_name], placeholder: "Ej: Carlos Ruiz", style: "width: 100%; padding: 6px 10px; box-sizing: border-box;" %>
+      </div>
+      <div style="flex: 1;">
+        <label style="display: block; font-size: 13px; color: #475569; margin-bottom: 3px;">Email:</label>
+        <%= email_field_tag :new_customer_email, params[:new_customer_email], placeholder: "carlos@gmail.com", style: "width: 100%; padding: 6px 10px; box-sizing: border-box;" %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Condiciones Comerciales (Precio, Moneda, Medio de Pago) -->
+  <div style="display: flex; gap: 15px; max-width: 550px; margin-bottom: 15px;">
+    <div style="flex: 2;">
+      <%= f.label :price, "Precio final acordado *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+      <%= f.number_field :price, step: "any", required: true, placeholder: "Monto acordado",
+            style: "width: 100%; padding: 7px 10px; box-sizing: border-box;" %>
+    </div>
+
+    <div style="flex: 1;">
+      <%= f.label :currency, "Moneda *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+      <%= f.select :currency, [["Pesos (ARS $)", "ars"], ["Dólares (USD $)", "usd"]], {},
+            { style: "width: 100%; padding: 7px 10px;" } %>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 15px; max-width: 550px; margin-bottom: 15px;">
+    <div style="flex: 1;">
+      <%= f.label :payment_method, "Forma de Pago *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+      <%= f.select :payment_method, [
+            ["Efectivo / Contado", "cash"],
+            ["Transferencia bancaria", "transfer"],
+            ["Financiación / Crédito", "financed"],
+            ["Permuta (Entrega de usado)", "trade_in"]
+          ], {}, { style: "width: 100%; padding: 7px 10px;" } %>
+    </div>
+
+    <div style="flex: 1;">
+      <%= f.label :sold_at, "Fecha de la Venta *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+      <%= f.date_field :sold_at, required: true, style: "width: 100%; padding: 7px 10px; box-sizing: border-box;" %>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 20px; max-width: 550px;">
+    <%= f.label :notes, "Observaciones / Condiciones especiales", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
+    <%= f.text_area :notes, rows: 3, placeholder: "Ej: Se entrega con service oficial, incluye transferencia, etc.",
+          style: "width: 100%; padding: 7px 10px; box-sizing: border-box;" %>
+  </div>
+
+  <div style="display: flex; gap: 12px; align-items: center;">
+    <%= f.submit "Confirmar y Registrar Venta",
+          style: "background-color: #059669; color: white; padding: 10px 18px; border: none; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer;" %>
+    <%= link_to "Cancelar", admin_sales_path, style: "color: #64748b; text-decoration: none;" %>
+  </div>
+<% end %>

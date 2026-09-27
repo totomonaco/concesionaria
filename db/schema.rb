@@ -10,11 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_22_173000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_182401) do
   create_table "brands", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
     t.datetime "updated_at", null: false
+  end
+
+  create_table "sales", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "currency", default: "ars", null: false
+    t.integer "customer_id", null: false
+    t.text "notes"
+    t.string "payment_method", default: "cash", null: false
+    t.decimal "price", precision: 14, scale: 2, null: false
+    t.integer "seller_id", null: false
+    t.date "sold_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "vehicle_id", null: false
+    t.index ["customer_id"], name: "index_sales_on_customer_id"
+    t.index ["seller_id"], name: "index_sales_on_seller_id"
+    t.index ["vehicle_id"], name: "index_sales_on_vehicle_id", unique: true
   end
 
   create_table "test_drives", force: :cascade do |t|
@@ -47,18 +63,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_22_173000) do
   end
 
   create_table "vehicles", force: :cascade do |t|
-    t.string "currency", default: "ars", null: false
     t.datetime "created_at", null: false
+    t.string "currency", default: "ars", null: false
     t.text "description"
     t.integer "km"
     t.decimal "price"
+    t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.boolean "used"
     t.integer "vehicle_model_id", null: false
     t.integer "year"
+    t.index ["status"], name: "index_vehicles_on_status"
     t.index ["vehicle_model_id"], name: "index_vehicles_on_vehicle_model_id"
   end
 
+  add_foreign_key "sales", "users", column: "customer_id"
+  add_foreign_key "sales", "users", column: "seller_id"
+  add_foreign_key "sales", "vehicles"
   add_foreign_key "test_drives", "users"
   add_foreign_key "test_drives", "vehicles"
   add_foreign_key "vehicle_models", "brands"

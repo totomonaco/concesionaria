@@ -1,8 +1,13 @@
 class Vehicle < ApplicationRecord
   belongs_to :vehicle_model
   has_many :test_drives, class_name: "TestDrive", dependent: :destroy
+  has_one :sale, dependent: :nullify
 
   enum :currency, { ars: "ars", usd: "usd" }, default: "ars"
+  enum :status, { available: 0, reserved: 1, sold: 2 }, default: :available
+
+  scope :available_for_sale, -> { where(status: [:available, :reserved]) }
+  scope :by_status, ->(s) { where(status: s) if s.present? && s != "all" }
 
   validates :vehicle_model, presence: { message: "debe seleccionarse" }
   validates :year, presence: { message: "no puede estar en blanco" }, 
@@ -24,5 +29,14 @@ class Vehicle < ApplicationRecord
 
   def display_name
     "#{title} - #{formatted_price}"
+  end
+
+  def status_name
+    case status
+    when "available" then "Disponible"
+    when "reserved" then "Reservado"
+    when "sold" then "Vendido"
+    else status.to_s.humanize
+    end
   end
 end

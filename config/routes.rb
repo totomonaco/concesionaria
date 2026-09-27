@@ -33,5 +33,6 @@ Rails.application.routes.draw do
         patch :cancel
       end
     end
+    resources :sales, only: %i[index new create show destroy]
   end
 end
