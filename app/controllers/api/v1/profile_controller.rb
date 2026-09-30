@@ -8,6 +8,7 @@ module Api
           email: current_user.email,
           role: current_user.role,
           test_drives_count: current_user.test_drives.count,
+          appraisals_count: current_user.appraisals.count,
           purchases_count: current_user.sales_as_customer.count
         }
       end
