@@ -1,0 +1,31 @@
+<div style="margin-bottom: 20px;">
+  <h1 style="margin: 0 0 4px 0;">Tasaciones Recibidas</h1>
+  <span style="font-size: 14px; color: #64748b;">Solicitudes de cotización enviadas por clientes</span>
+</div>
+
+<table border="1" cellpadding="6">
+  <thead>
+    <tr>
+      <th>Auto</th>
+      <th>KM</th>
+      <th>Cliente</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Cotización</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @appraisals.each do |a| %>
+      <tr>
+        <td><%= a.car_title %></td>
+        <td><%= a.km %> km</td>
+        <td><%= a.user&.display_name || "Anónimo" %></td>
+        <td><%= a.created_at.strftime("%d/%m/%Y") %></td>
+        <td><%= a.status_name %></td>
+        <td><%= a.quoted_price ? "$ #{a.quoted_price}" : "-" %></td>
+        <td><%= link_to "Ver / Cotizar", admin_appraisal_path(a) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

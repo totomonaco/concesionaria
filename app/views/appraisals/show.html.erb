@@ -1,0 +1,25 @@
+<h1>Solicitud enviada</h1>
+
+<p>Tu solicitud para <strong><%= @appraisal.car_title %></strong> fue recibida.</p>
+
+<table>
+  <tr><th>Marca</th><td><%= @appraisal.make %></td></tr>
+  <tr><th>Modelo</th><td><%= @appraisal.car_model %></td></tr>
+  <tr><th>Año</th><td><%= @appraisal.year %></td></tr>
+  <tr><th>KM</th><td><%= @appraisal.km %></td></tr>
+  <tr><th>Estado</th><td><%= @appraisal.status_name %></td></tr>
+  <% if @appraisal.description.present? %>
+    <tr><th>Descripción</th><td><%= @appraisal.description %></td></tr>
+  <% end %>
+  <% if @appraisal.photo.attached? %>
+    <tr><th>Foto</th><td><%= image_tag @appraisal.photo, style: "max-width:300px;" %></td></tr>
+  <% end %>
+  <% if @appraisal.quoted_price.present? %>
+    <tr><th>Cotización</th><td><strong>$ <%= @appraisal.quoted_price %></strong></td></tr>
+  <% end %>
+  <% if @appraisal.admin_notes.present? %>
+    <tr><th>Notas</th><td><%= @appraisal.admin_notes %></td></tr>
+  <% end %>
+</table>
+
+<%= link_to "Cotizar otro auto", new_appraisal_path %>

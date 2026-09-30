@@ -1,0 +1,40 @@
+<h1>Tasación: <%= @appraisal.car_title %></h1>
+
+<table border="1" cellpadding="6">
+  <tr><th>Marca</th><td><%= @appraisal.make %></td></tr>
+  <tr><th>Modelo</th><td><%= @appraisal.car_model %></td></tr>
+  <tr><th>Año</th><td><%= @appraisal.year %></td></tr>
+  <tr><th>KM</th><td><%= @appraisal.km %> km</td></tr>
+  <tr><th>Cliente</th><td><%= @appraisal.user&.display_name || "Anónimo" %></td></tr>
+  <tr><th>Fecha solicitud</th><td><%= @appraisal.created_at.strftime("%d/%m/%Y %H:%M") %></td></tr>
+  <tr><th>Descripción</th><td><%= @appraisal.description.presence || "-" %></td></tr>
+  <tr><th>Estado actual</th><td><%= @appraisal.status_name %></td></tr>
+  <% if @appraisal.photo.attached? %>
+    <tr><th>Foto</th><td><%= image_tag @appraisal.photo, style: "max-width:400px;" %></td></tr>
+  <% end %>
+</table>
+
+<hr>
+<h2>Cargar cotización</h2>
+
+<%= form_with model: [:admin, @appraisal], method: :patch, local: true do |f| %>
+  <div>
+    <%= f.label :quoted_price, "Precio cotizado ($)" %>
+    <%= f.number_field :quoted_price, step: 0.01, value: @appraisal.quoted_price %>
+  </div>
+
+  <div>
+    <%= f.label :status, "Estado" %>
+    <%= f.select :status, [["Pendiente","pending"],["En revisión","reviewed"],["Cotizado","quoted"],["Rechazado","rejected"]], selected: @appraisal.status %>
+  </div>
+
+  <div>
+    <%= f.label :admin_notes, "Notas internas" %>
+    <%= f.text_area :admin_notes, rows: 3, value: @appraisal.admin_notes %>
+  </div>
+
+  <%= f.submit "Guardar cotización" %>
+<% end %>
+
+<br>
+<%= link_to "Volver al listado", admin_appraisals_path %>
