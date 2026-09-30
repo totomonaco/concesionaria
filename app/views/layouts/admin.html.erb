@@ -13,14 +13,23 @@
     </style>
   </head>
   <body>
-    <nav>
-      <strong>Concesionaria Admin</strong>
-      <%= link_to "Vehículos", admin_vehicles_path %>
-      <%= link_to "Marcas", admin_brands_path %>
-      <%= link_to "Modelos", admin_vehicle_models_path %>
-      <%= link_to "Test Drives", admin_test_drives_path %>
-      <%= link_to "Ventas", admin_sales_path %>
-      <%= link_to "Cerrar sesión", admin_logout_path, data: { turbo_method: :delete } %>
+    <nav style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+        <strong style="color: #0f172a; font-size: 16px;">Concesionaria Admin</strong>
+        <%= link_to "Vehículos", admin_vehicles_path %>
+        <%= link_to "Marcas", admin_brands_path %>
+        <%= link_to "Modelos", admin_vehicle_models_path %>
+        <%= link_to "Test Drives", admin_test_drives_path %>
+        <%= link_to "Ventas", admin_sales_path %>
+        <%= link_to "Tasaciones", admin_appraisals_path %>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-size: 12px; color: #64748b; font-weight: bold; text-transform: uppercase;">Probar como cliente:</span>
+        <%= link_to "Test Drive", new_test_drive_path, target: "_blank", style: "background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+        <%= link_to "Cotizar Auto", new_appraisal_path, target: "_blank", style: "background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; text-decoration: none;" %>
+        <span style="color: #cbd5e1; margin: 0 4px;">|</span>
+        <%= link_to "Cerrar sesión", admin_logout_path, data: { turbo_method: :delete }, style: "color: #dc2626; font-size: 13px; text-decoration: none;" %>
+      </div>
     </nav>
     <% if flash[:notice] %>
       <div style="background-color: #d1fae5; color: #065f46; padding: 10px 14px; border-radius: 6px; margin-bottom: 15px; border: 1px solid #a7f3d0;">

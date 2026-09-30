@@ -1,0 +1,116 @@
+<div style="max-width: 700px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h1 style="margin: 0;">Detalle de Test Drive #<%= @test_drive.id %></h1>
+    <%= link_to "← Volver al listado", admin_test_drives_path, style: "color: #2563eb; text-decoration: none; font-weight: bold;" %>
+  </div>
+
+  <table border="1" cellpadding="8" style="width: 100%; border-collapse: collapse; border: 1px solid #e2e8f0; margin-bottom: 25px;">
+    <tr>
+      <th style="background-color: #f8fafc; text-align: left; width: 180px; padding: 10px; border: 1px solid #e2e8f0;">Vehículo</th>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">
+        <strong><%= @test_drive.vehicle.vehicle_model.brand.name %> <%= @test_drive.vehicle.vehicle_model.name %></strong>
+        <span style="color: #64748b; font-size: 13px;">(<%= @test_drive.vehicle.year %>)</span>
+        <div style="margin-top: 4px; font-size: 13px;">
+          Precio: <%= @test_drive.vehicle.formatted_price %> • <%= @test_drive.vehicle.used? ? "Usado (#{@test_drive.vehicle.km} km)" : "0km" %>
+        </div>
+        <div style="margin-top: 6px;">
+          <%= link_to "Ver ficha del auto", admin_vehicle_path(@test_drive.vehicle), style: "font-size: 12px; color: #2563eb; text-decoration: none;" %>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th style="background-color: #f8fafc; text-align: left; padding: 10px; border: 1px solid #e2e8f0;">Cliente</th>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">
+        <strong><%= @test_drive.user.name %></strong>
+        <div style="color: #64748b; font-size: 13px;"><%= @test_drive.user.email %></div>
+      </td>
+    </tr>
+    <tr>
+      <th style="background-color: #f8fafc; text-align: left; padding: 10px; border: 1px solid #e2e8f0;">Fecha programada</th>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;"><%= @test_drive.formatted_date %></td>
+    </tr>
+    <tr>
+      <th style="background-color: #f8fafc; text-align: left; padding: 10px; border: 1px solid #e2e8f0;">Horario programado</th>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;"><%= @test_drive.formatted_time %></td>
+    </tr>
+    <tr>
+      <th style="background-color: #f8fafc; text-align: left; padding: 10px; border: 1px solid #e2e8f0;">Estado actual</th>
+      <td style="padding: 10px; border: 1px solid #e2e8f0;">
+        <% case @test_drive.status %>
+        <% when "pending" %>
+          <span style="background-color: #fef3c7; color: #b45309; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+            Pendiente
+          </span>
+        <% when "confirmed" %>
+          <span style="background-color: #d1fae5; color: #047857; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+            Confirmado
+          </span>
+        <% when "cancelled" %>
+          <span style="background-color: #fee2e2; color: #b91c1c; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block;">
+            Cancelado
+          </span>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Acciones rápidas de confirmación o cancelación -->
+  <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 15px; margin-bottom: 25px; display: flex; align-items: center; justify-content: space-between;">
+    <div>
+      <strong style="display: block; margin-bottom: 4px;">Acción rápida de estado:</strong>
+      <span style="font-size: 13px; color: #64748b;">Podés cambiar el estado directamente con un clic.</span>
+    </div>
+    <div style="display: flex; gap: 10px;">
+      <% unless @test_drive.confirmed? %>
+        <%= button_to "Confirmar Turno", confirm_admin_test_drive_path(@test_drive),
+              method: :patch,
+              style: "background-color: #10b981; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;" %>
+      <% end %>
+      <% unless @test_drive.cancelled? %>
+        <%= button_to "Cancelar Turno", cancel_admin_test_drive_path(@test_drive),
+              method: :patch,
+              data: { turbo_confirm: "¿Estás seguro de cancelar este Test Drive?" },
+              style: "background-color: #ef4444; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer;" %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Formulario para reprogramar o modificar estado -->
+  <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 20px; background-color: white;">
+    <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 16px;">Reprogramar o Modificar Turno</h3>
+
+    <%= form_with model: [:admin, @test_drive], method: :patch, local: true do |f| %>
+      <% if @test_drive.errors.any? %>
+        <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #991b1b; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+          <ul style="margin: 0; padding-left: 20px;">
+            <% @test_drive.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <div style="flex: 1;">
+          <%= f.label :scheduled_date, "Fecha programada", style: "display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px;" %>
+          <%= f.date_field :scheduled_date, min: Date.current, style: "width: 100%; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" %>
+        </div>
+        <div style="flex: 1;">
+          <%= f.label :scheduled_time, "Horario", style: "display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px;" %>
+          <%= f.time_field :scheduled_time, style: "width: 100%; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" %>
+        </div>
+        <div style="flex: 1;">
+          <%= f.label :status, "Estado", style: "display: block; font-weight: bold; margin-bottom: 5px; font-size: 13px;" %>
+          <%= f.select :status, [["Pendiente", "pending"], ["Confirmado", "confirmed"], ["Cancelado", "cancelled"]], {}, style: "width: 100%; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box;" %>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+        <%= f.submit "Guardar Cambios", style: "background-color: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer;" %>
+        <%= link_to "Eliminar registro", admin_test_drive_path(@test_drive),
+              data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés eliminar permanentemente este registro?" },
+              style: "color: #dc2626; font-size: 13px; text-decoration: none;" %>
+      </div>
+    <% end %>
+  </div>
+</div>

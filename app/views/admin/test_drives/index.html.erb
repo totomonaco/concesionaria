@@ -1,6 +1,6 @@
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-  <h1 style="margin: 0;">Gestión de Test Drives</h1>
-  <%= link_to "+ Agendar nuevo Test Drive", new_admin_test_drive_path, style: "background-color: #2563eb; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-weight: bold;" %>
+<div style="margin-bottom: 20px;">
+  <h1 style="margin: 0 0 4px 0;">Gestión de Solicitudes de Test Drive</h1>
+  <span style="font-size: 14px; color: #64748b;">Solicitudes realizadas por clientes</span>
 </div>
 
 <!-- Filtros por estado -->
@@ -28,8 +28,7 @@
 
 <% if @test_drives.empty? %>
   <div style="padding: 30px; text-align: center; background-color: #f9fafb; border: 1px dashed #d1d5db; border-radius: 6px; color: #6b7280;">
-    <p style="font-size: 16px; margin: 0 0 10px 0;">No se encontraron test drives para el filtro seleccionado.</p>
-    <%= link_to "+ Agendar un nuevo Test Drive", new_admin_test_drive_path, style: "color: #2563eb; font-weight: bold;" %>
+    <p style="font-size: 16px; margin: 0;">No se encontraron solicitudes de test drive para el filtro seleccionado.</p>
   </div>
 <% else %>
   <table border="1" cellpadding="8" style="width: 100%; border-collapse: collapse; border: 1px solid #e5e7eb; margin-top: 10px;">
@@ -97,7 +96,7 @@
             </div>
           </td>
           <td style="padding: 10px; border: 1px solid #e2e8f0; white-space: nowrap;">
-            <%= link_to "Editar", edit_admin_test_drive_path(td), style: "color: #2563eb; text-decoration: none;" %> |
+            <%= link_to "Ver detalle", admin_test_drive_path(td), style: "color: #2563eb; text-decoration: none; font-weight: 500;" %> |
             <%= link_to "Borrar", admin_test_drive_path(td),
                   data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés eliminar el registro del test drive?" },
                   style: "color: #dc2626; text-decoration: none;" %>

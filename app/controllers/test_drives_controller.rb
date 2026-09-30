@@ -1,6 +1,8 @@
 class TestDrivesController < ApplicationController
+  before_action :set_available_vehicles, only: %i[new create]
+
   def new
-    @vehicle = Vehicle.find_by(id: params[:vehicle_id])
+    @vehicle = @vehicles.find_by(id: params[:vehicle_id])
     @test_drive = TestDrive.new(
       vehicle: @vehicle,
       scheduled_date: Date.current + 1.day,
@@ -9,7 +11,7 @@ class TestDrivesController < ApplicationController
   end
 
   def create
-    @vehicle = Vehicle.find_by(id: params[:test_drive][:vehicle_id])
+    @vehicle = @vehicles.find_by(id: params[:test_drive][:vehicle_id])
     customer_email = params[:customer_email].to_s.strip.downcase
     customer_name = params[:customer_name].to_s.strip
 
@@ -47,6 +49,10 @@ class TestDrivesController < ApplicationController
   end
 
   private
+
+  def set_available_vehicles
+    @vehicles = Vehicle.where.not(status: :sold).includes(vehicle_model: :brand).order("brands.name ASC, vehicle_models.name ASC")
+  end
 
   def test_drive_params
     params.require(:test_drive).permit(:vehicle_id, :scheduled_date, :scheduled_time)

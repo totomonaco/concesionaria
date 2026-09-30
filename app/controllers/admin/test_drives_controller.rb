@@ -2,7 +2,7 @@ module Admin
   class TestDrivesController < ApplicationController
     layout "admin"
     before_action :require_seller!
-    before_action :set_test_drive, only: %i[edit update destroy confirm cancel]
+    before_action :set_test_drive, only: %i[show update destroy confirm cancel]
 
     def index
       @status = params[:status].presence || "all"
@@ -15,43 +15,14 @@ module Admin
       @pending_count = TestDrive.pending.count
     end
 
-    def new
-      @test_drive = TestDrive.new(
-        vehicle_id: params[:vehicle_id],
-        scheduled_date: Date.current,
-        scheduled_time: Time.zone.parse("10:00")
-      )
-    end
-
-    def create
-      @test_drive = TestDrive.new(test_drive_params)
-
-      if params[:new_customer_email].present?
-        customer = User.find_or_initialize_by(email: params[:new_customer_email].strip.downcase)
-        if customer.new_record?
-          customer.name = params[:new_customer_name].presence || "Cliente"
-          customer.role = :customer
-          customer.password = SecureRandom.hex(8)
-          customer.save
-        end
-        @test_drive.user = customer if customer.persisted?
-      end
-
-      if @test_drive.save
-        redirect_to admin_test_drives_path, notice: "Test Drive agendado correctamente."
-      else
-        render :new, status: :unprocessable_entity
-      end
-    end
-
-    def edit
+    def show
     end
 
     def update
       if @test_drive.update(test_drive_params)
-        redirect_to admin_test_drives_path, notice: "Test Drive actualizado correctamente."
+        redirect_to admin_test_drive_path(@test_drive), notice: "Test Drive actualizado correctamente."
       else
-        render :edit, status: :unprocessable_entity
+        render :show, status: :unprocessable_entity
       end
     end
 

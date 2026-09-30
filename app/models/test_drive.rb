@@ -13,6 +13,7 @@ class TestDrive < ApplicationRecord
   validates :scheduled_time, presence: true
   validate :date_not_in_the_past
   validate :no_overlap_for_same_vehicle
+  validate :vehicle_must_be_available
 
   def status_name
     case status
@@ -48,5 +49,11 @@ class TestDrive < ApplicationRecord
                             .where.not(id: id)
 
     errors.add(:base, "Ya existe un test drive para ese vehículo en ese horario") if overlapping.exists?
+  end
+
+  def vehicle_must_be_available
+    return if vehicle.blank?
+
+    errors.add(:vehicle, "no está disponible para test drive porque ya fue vendido") if vehicle.sold?
   end
 end
