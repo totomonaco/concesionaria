@@ -15,7 +15,21 @@ class User < ApplicationRecord
             format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
 
+  before_create :generate_api_token
+
   def display_name
     "#{name} (#{email})"
+  end
+
+  def generate_api_token
+    self.api_token = SecureRandom.hex(24)
+  end
+
+  def regenerate_api_token!
+    update_column(:api_token, SecureRandom.hex(24))
+  end
+
+  def invalidate_api_token!
+    update_column(:api_token, nil)
   end
 end
