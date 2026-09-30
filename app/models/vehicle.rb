@@ -2,16 +2,29 @@ class Vehicle < ApplicationRecord
   belongs_to :vehicle_model
   has_many :test_drives, class_name: "TestDrive", dependent: :destroy
   has_one :sale, dependent: :nullify
+  has_many_attached :photos
+
+  def cover_photo
+    photos.first if photos.attached?
+  end
 
   enum :currency, { ars: "ars", usd: "usd" }, default: "ars"
   enum :status, { available: 0, reserved: 1, sold: 2 }, default: :available
-  enum :condition, { used: "used", zero_km: "new" }, default: "used"
 
   scope :available_for_sale, -> { where(status: [:available, :reserved]) }
   scope :by_status, ->(s) { where(status: s) if s.present? && s != "all" }
-  scope :by_condition, ->(c) { where(condition: c) if c.present? }
+  scope :by_condition, ->(c) {
+    case c.to_s.downcase
+    when "used" then where(used: true)
+    when "new", "zero_km" then where(used: false)
+    end
+  }
   scope :by_brand, ->(brand_id) { joins(vehicle_model: :brand).where(brands: { id: brand_id }) if brand_id.present? }
   scope :by_price, ->(order) { order(price: order) if %w[asc desc].include?(order.to_s) }
+
+  def condition
+    used? ? "used" : "new"
+  end
 
   validates :vehicle_model, presence: { message: "debe seleccionarse" }
   validates :year, presence: { message: "no puede estar en blanco" }, 

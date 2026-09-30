@@ -2,10 +2,10 @@ module Admin
   class VehiclesController < ApplicationController
     layout "admin"
     before_action :require_seller!
-    before_action :set_vehicle, only: %i[edit update destroy]
+    before_action :set_vehicle, only: %i[edit update destroy purge_photo]
 
     def index
-      @vehicles = Vehicle.includes({ vehicle_model: :brand }, :test_drives, :sale).order(created_at: :desc)
+      @vehicles = Vehicle.includes({ vehicle_model: :brand }, :test_drives, :sale, photos_attachments: :blob).order(created_at: :desc)
     end
 
     def new
@@ -13,7 +13,10 @@ module Admin
     end
 
     def create
-      @vehicle = Vehicle.new(vehicle_params)
+      new_photos = extract_clean_photos
+      @vehicle = Vehicle.new(vehicle_params.except(:photos))
+      @vehicle.photos.attach(new_photos) if new_photos.any?
+
       if @vehicle.save
         redirect_to admin_vehicles_path, notice: "Vehículo creado correctamente"
       else
@@ -25,11 +28,20 @@ module Admin
     end
 
     def update
-      if @vehicle.update(vehicle_params)
+      new_photos = extract_clean_photos
+      @vehicle.photos.attach(new_photos) if new_photos.any?
+
+      if @vehicle.update(vehicle_params.except(:photos))
         redirect_to admin_vehicles_path, notice: "Vehículo actualizado"
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    def purge_photo
+      photo = @vehicle.photos.find_by(id: params[:photo_id])
+      photo&.purge
+      redirect_to edit_admin_vehicle_path(@vehicle), notice: "Foto eliminada"
     end
 
     def destroy
@@ -43,8 +55,15 @@ module Admin
       @vehicle = Vehicle.find(params[:id])
     end
 
+    def extract_clean_photos
+      raw = params.dig(:vehicle, :photos)
+      Array(raw).select do |photo|
+        photo.respond_to?(:tempfile) && photo.original_filename.present? && photo.size.to_i > 0
+      end
+    end
+
     def vehicle_params
-      params.require(:vehicle).permit(:vehicle_model_id, :year, :price, :currency, :km, :used, :description)
+      params.require(:vehicle).permit(:vehicle_model_id, :year, :price, :currency, :km, :used, :description, photos: [])
     end
 
     def current_admin_user

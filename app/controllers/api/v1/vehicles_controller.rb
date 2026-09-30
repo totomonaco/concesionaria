@@ -5,7 +5,7 @@ module Api
 
       def index
         vehicles = Vehicle.available_for_sale
-                          .includes(vehicle_model: :brand)
+                          .includes({ vehicle_model: :brand }, photos_attachments: :blob)
                           .by_condition(params[:condition])
                           .by_brand(params[:brand_id])
                           .by_price(params[:sort])
@@ -14,7 +14,7 @@ module Api
       end
 
       def show
-        vehicle = Vehicle.includes(vehicle_model: :brand).find_by(id: params[:id])
+        vehicle = Vehicle.includes({ vehicle_model: :brand }, photos_attachments: :blob).find_by(id: params[:id])
 
         if vehicle
           render json: serialize_vehicle(vehicle, detailed: true)
@@ -26,6 +26,10 @@ module Api
       private
 
       def serialize_vehicle(vehicle, detailed: false)
+        first_photo = vehicle.photos.first if vehicle.photos.attached?
+        cover_url = first_photo ? Rails.application.routes.url_helpers.rails_blob_url(first_photo, only_path: true) : nil
+        photo_urls = vehicle.photos.attached? ? vehicle.photos.map { |p| Rails.application.routes.url_helpers.rails_blob_url(p, only_path: true) } : []
+
         data = {
           id: vehicle.id,
           brand: vehicle.vehicle_model.brand.name,
@@ -36,7 +40,9 @@ module Api
           price: vehicle.price,
           currency: vehicle.currency,
           formatted_price: vehicle.formatted_price,
-          status: vehicle.status
+          status: vehicle.status,
+          cover_photo: cover_url,
+          photos: photo_urls
         }
 
         if detailed

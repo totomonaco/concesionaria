@@ -1,4 +1,4 @@
-<%= form_with model: [:admin, vehicle] do |f| %>
+<%= form_with model: [:admin, vehicle], multipart: true do |f| %>
   <% if vehicle.errors.any? %>
     <div style="color: red;">
       <ul>
@@ -91,6 +91,67 @@
   </div>
   <div><%= f.label :used, "Usado" %> <%= f.check_box :used %></div>
   <div><%= f.label :description, "Descripción" %> <%= f.text_area :description %></div>
+
+  <div style="margin-top: 15px; margin-bottom: 15px;">
+    <label><strong>Fotos del vehículo:</strong></label><br>
+    <div id="photos_inputs_list" style="margin-top: 6px;">
+      <div style="margin-bottom: 8px;">
+        <label style="border: 1px solid #767676; background: #efefef; padding: 2px 7px; font-size: 13px; cursor: pointer; border-radius: 3px; display: inline-block;">
+          Seleccionar archivo
+          <input type="file" name="vehicle[photos][]" accept="image/*" style="display: none;" onchange="this.parentElement.nextElementSibling.textContent = this.files[0] ? this.files[0].name : 'Ningún archivo seleccionado'">
+        </label>
+        <span style="font-size: 13px; margin-left: 6px; color: #333;">Ningún archivo seleccionado</span>
+      </div>
+    </div>
+    <button type="button" id="btn_add_more_photos" style="cursor: pointer; padding: 4px 10px; margin-top: 4px; font-weight: bold;">
+      + Agregar otra foto
+    </button>
+
+    <script>
+      (function() {
+        function initAddPhotos() {
+          const btn = document.getElementById("btn_add_more_photos");
+          const container = document.getElementById("photos_inputs_list");
+          if (!btn || !container || btn.dataset.ready) return;
+          btn.dataset.ready = "true";
+
+          btn.addEventListener("click", function() {
+            const row = document.createElement("div");
+            row.style.marginBottom = "8px";
+            row.innerHTML = '<label style="border: 1px solid #767676; background: #efefef; padding: 2px 7px; font-size: 13px; cursor: pointer; border-radius: 3px; display: inline-block;">Seleccionar archivo<input type="file" name="vehicle[photos][]" accept="image/*" style="display: none;" onchange="this.parentElement.nextElementSibling.textContent = this.files[0] ? this.files[0].name : \'Ningún archivo seleccionado\'"></label> <span style="font-size: 13px; margin-left: 6px; color: #333;">Ningún archivo seleccionado</span> <button type="button" onclick="this.parentElement.remove()" style="color: red; cursor: pointer; border: 1px solid #ccc; background: #fff; padding: 1px 6px; margin-left: 6px;" title="Quitar campo">✕</button>';
+            container.appendChild(row);
+          });
+        }
+
+        document.addEventListener("turbo:load", initAddPhotos);
+        document.addEventListener("DOMContentLoaded", initAddPhotos);
+        initAddPhotos();
+      })();
+    </script>
+
+    <% if vehicle.photos.attached? %>
+      <div style="margin-top: 15px;">
+        <p><strong>Fotos actuales:</strong></p>
+        <div>
+          <% vehicle.photos.each_with_index do |photo, index| %>
+            <div style="display: inline-block; vertical-align: top; margin-right: 15px; margin-bottom: 15px; text-align: center;">
+              <%= image_tag photo, style: "width: 160px; height: 110px; object-fit: cover; display: block; border: 1px solid #ccc;" %>
+              <div style="font-size: 12px; margin-top: 4px;">
+                <% if index == 0 %>
+                  <strong>(Portada)</strong><br>
+                <% else %>
+                  Foto <%= index + 1 %><br>
+                <% end %>
+                <% if vehicle.persisted? %>
+                  <%= link_to "Eliminar", purge_photo_admin_vehicle_path(vehicle, photo_id: photo.id), data: { turbo_method: :delete, turbo_confirm: "¿Eliminar esta foto?" }, style: "color: red;" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
   <script>
     (function() {
