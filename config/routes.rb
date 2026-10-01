@@ -13,8 +13,9 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post   "sessions",    to: "sessions#create"
-      delete "sessions",    to: "sessions#destroy"
+      post   "sessions",      to: "sessions#create"
+      delete "sessions",      to: "sessions#destroy"
+      post   "registrations", to: "registrations#create"
       resources :vehicles,    only: %i[index show]
       resources :test_drives, only: %i[index create]
       resources :appraisals,  only: %i[index create]

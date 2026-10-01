@@ -1,0 +1,304 @@
+{
+  "info": {
+    "_postman_id": "c1f7b8d0-concesionaria-api-tp",
+    "name": "TP1 Concesionaria API",
+    "description": "Colección completa para probar todos los endpoints del TP1 en Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Autenticación",
+      "item": [
+        {
+          "name": "1. Iniciar Sesión (Login)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    console.log('Token guardado automáticamente:', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente@ejemplo.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["sessions"]
+            }
+          }
+        },
+        {
+          "name": "2. Crear Cuenta (Registro)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.token) {",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Rossi\",\n  \"email\": \"carlos_rossi@test.com\",\n  \"password\": \"password123\",\n  \"password_confirmation\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/registrations",
+              "host": ["{{base_url}}"],
+              "path": ["registrations"]
+            }
+          }
+        },
+        {
+          "name": "3. Cerrar Sesión (Logout)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["sessions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Catálogo de Vehículos (Público)",
+      "item": [
+        {
+          "name": "1. Ver Todos los Vehículos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vehicles",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles"]
+            }
+          }
+        },
+        {
+          "name": "2. Filtrar por Usados y Ordenar Precio Ascendente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vehicles?condition=used&sort=asc",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles"],
+              "query": [
+                {
+                  "key": "condition",
+                  "value": "used"
+                },
+                {
+                  "key": "sort",
+                  "value": "asc"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "3. Ver Detalle de Vehículo (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vehicles/1",
+              "host": ["{{base_url}}"],
+              "path": ["vehicles", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Test Drives (Pruebas de Manejo)",
+      "item": [
+        {
+          "name": "1. Solicitar un Test Drive",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicle_id\": 1,\n  \"scheduled_at\": \"2026-10-15T10:00:00\",\n  \"notes\": \"Prueba solicitada desde Postman\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test_drives",
+              "host": ["{{base_url}}"],
+              "path": ["test_drives"]
+            }
+          }
+        },
+        {
+          "name": "2. Mis Test Drives",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/test_drives",
+              "host": ["{{base_url}}"],
+              "path": ["test_drives"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Cotizaciones / Tasaciones",
+      "item": [
+        {
+          "name": "1. Enviar Auto Usado a Cotizar",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "make",
+                  "value": "Ford",
+                  "type": "text"
+                },
+                {
+                  "key": "car_model",
+                  "value": "Fiesta Kinetic",
+                  "type": "text"
+                },
+                {
+                  "key": "year",
+                  "value": "2018",
+                  "type": "text"
+                },
+                {
+                  "key": "km",
+                  "value": "65000",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Excelente estado, cubiertas nuevas, service al día.",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/appraisals",
+              "host": ["{{base_url}}"],
+              "path": ["appraisals"]
+            }
+          }
+        },
+        {
+          "name": "2. Mis Cotizaciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/appraisals",
+              "host": ["{{base_url}}"],
+              "path": ["appraisals"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Perfil de Usuario",
+      "item": [
+        {
+          "name": "1. Ver Mi Perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
