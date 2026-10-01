@@ -5,7 +5,7 @@
       <div style="font-size: 13px; color: #64748b; margin-top: 4px;">Concesionaria Oficial • Operación cerrada</div>
     </div>
     <div style="text-align: right;">
-      <span style="background-color: #d1fae5; color: #065f46; font-size: 13px; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block;">
+      <span style="background-color: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; font-size: 13px; font-weight: bold; padding: 4px 12px; border-radius: 20px; display: inline-block;">
         ✓ VENTA CONCRETADA
       </span>
       <div style="font-size: 12px; color: #64748b; margin-top: 6px;">Fecha: <%= @sale.formatted_date %></div>
@@ -25,7 +25,7 @@
       <span><%= @sale.vehicle.used? ? "Usado (#{number_with_delimiter(@sale.vehicle.km, delimiter: '.')} km)" : "0km" %></span>
 
       <span style="color: #64748b; font-weight: bold;">Estado actual:</span>
-      <span style="color: #b91c1c; font-weight: bold;">Vendido (Descontado de stock)</span>
+      <span style="color: #475569; font-weight: bold;">Vendido (Descontado de stock)</span>
     </div>
   </div>
 
@@ -51,7 +51,7 @@
     </h3>
     <div style="display: grid; grid-template-columns: 180px 1fr; row-gap: 8px; font-size: 14px;">
       <span style="color: #64748b; font-weight: bold;">Precio Final Pactado:</span>
-      <span style="color: #047857; font-weight: bold; font-size: 20px;"><%= @sale.formatted_price %></span>
+      <span style="color: #1e293b; font-weight: bold; font-size: 20px;"><%= @sale.formatted_price %></span>
 
       <span style="color: #64748b; font-weight: bold;">Forma de Pago:</span>
       <span style="font-weight: 500;"><%= @sale.payment_method_name %></span>
@@ -66,16 +66,16 @@
   <!-- Botones de Acción -->
   <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 20px;">
     <div>
-      <button onclick="window.print()" style="background-color: #334155; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;">
+      <button onclick="window.print()" style="background-color: #475569; color: white; border: none; padding: 8px 14px; border-radius: 4px; font-weight: bold; cursor: pointer;">
         🖨️ Imprimir Comprobante
       </button>
-      <%= link_to "Volver al listado de Ventas", admin_sales_path, style: "margin-left: 15px; color: #2563eb; text-decoration: none;" %>
+      <%= link_to "Volver al listado de Ventas", admin_sales_path, style: "margin-left: 15px; color: #475569; text-decoration: none;" %>
     </div>
 
     <div>
       <%= link_to "Anular esta Venta", admin_sale_path(@sale),
             data: { turbo_method: :delete, turbo_confirm: "¿Estás seguro de anular esta venta? El auto volverá a estar Disponible." },
-            style: "color: #dc2626; text-decoration: none; font-size: 13px;" %>
+            style: "color: #64748b; text-decoration: none; font-size: 13px;" %>
     </div>
   </div>
 </div>

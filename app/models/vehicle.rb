@@ -1,7 +1,7 @@
 class Vehicle < ApplicationRecord
   belongs_to :vehicle_model
   has_many :test_drives, class_name: "TestDrive", dependent: :destroy
-  has_one :sale, dependent: :nullify
+  has_one :sale, dependent: :destroy
   has_many_attached :photos
 
   def cover_photo

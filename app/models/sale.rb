@@ -59,6 +59,6 @@ class Sale < ApplicationRecord
   end
 
   def mark_vehicle_as_available
-    vehicle.update_column(:status, Vehicle.statuses[:available]) if vehicle.present?
+    vehicle.update_column(:status, Vehicle.statuses[:available]) if vehicle.present? && vehicle.persisted?
   end
 end

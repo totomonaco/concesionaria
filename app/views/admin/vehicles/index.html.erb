@@ -69,7 +69,7 @@
           <% if vehicle.sold? && vehicle.sale %>
             <%= link_to "Ver Venta", admin_sale_path(vehicle.sale), style: "background-color: #f1f5f9; color: #0f172a; padding: 3px 8px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; border: 1px solid #cbd5e1; margin-right: 5px;" %>
           <% elsif !vehicle.sold? %>
-            <%= link_to "+ Vender", new_admin_sale_path(vehicle_id: vehicle.id), style: "background-color: #059669; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; margin-right: 5px;" %>
+            <%= link_to "+ Vender", new_admin_sale_path(vehicle_id: vehicle.id), style: "background-color: #475569; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; text-decoration: none; font-weight: bold; margin-right: 5px;" %>
           <% end %>
           <%= link_to "Editar", edit_admin_vehicle_path(vehicle) %> |
           <%= link_to "Borrar", admin_vehicle_path(vehicle), data: { turbo_method: :delete, turbo_confirm: "¿Seguro que querés borrar este vehículo?" } %>
