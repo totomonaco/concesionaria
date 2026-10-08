@@ -38,6 +38,7 @@ class TestDrivesController < ApplicationController
     @test_drive.status = :pending
 
     if @test_drive.save
+      TestDriveMailer.confirmation_email(@test_drive).deliver_later
       redirect_to test_drive_path(@test_drive), notice: "¡Tu solicitud de Test Drive fue enviada con éxito! Nos contactaremos a la brevedad."
     else
       render :new, status: :unprocessable_entity

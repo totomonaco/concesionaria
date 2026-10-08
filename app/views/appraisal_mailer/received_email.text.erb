@@ -1,0 +1,11 @@
+¡Hola <%= @user&.name || "Cliente" %>!
+
+Hemos recibido tu solicitud de cotización para el vehículo: <%= @appraisal.car_title %>.
+
+Datos informados:
+- Kilómetros: <%= @appraisal.km %> km
+- Descripción: <%= @appraisal.description %>
+
+Te informaremos apenas tengamos la cotización definida.
+
+Concesionaria Oficial.

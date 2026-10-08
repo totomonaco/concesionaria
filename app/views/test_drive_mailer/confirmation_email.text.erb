@@ -1,0 +1,12 @@
+¡Hola <%= @user.name %>!
+
+Hemos recibido tu solicitud de Test Drive para el vehículo: <%= @vehicle.title %>.
+
+Detalles:
+- Fecha: <%= @test_drive.formatted_date %>
+- Horario: <%= @test_drive.formatted_time %>
+- Estado: <%= @test_drive.status_name %>
+
+Nos pondremos en contacto a la brevedad para coordinar la prueba de manejo.
+
+Concesionaria Oficial.

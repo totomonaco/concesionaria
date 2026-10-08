@@ -11,6 +11,16 @@
   <% end %>
 
   <div>
+    <%= label_tag :customer_name, "Tu Nombre" %>
+    <%= text_field_tag :customer_name, params[:customer_name], placeholder: "Ej: Juan Pérez" %>
+  </div>
+
+  <div>
+    <%= label_tag :customer_email, "Tu Email (para recibir la cotización)" %>
+    <%= email_field_tag :customer_email, params[:customer_email], placeholder: "juan@ejemplo.com" %>
+  </div>
+
+  <div>
     <%= f.label :make, "Marca" %>
     <%= f.text_field :make, placeholder: "Ej: Ford, Volkswagen, Toyota" %>
   </div>

@@ -1,0 +1,12 @@
+¡Hola <%= @user&.name || "Cliente" %>!
+
+Tu tasación para el vehículo <%= @appraisal.car_title %> ya está lista.
+
+Monto cotizado: $<%= number_with_delimiter(@appraisal.quoted_price.to_i) %>
+<% if @appraisal.admin_notes.present? %>
+Observaciones: <%= @appraisal.admin_notes %>
+<% end %>
+
+Podés acercarte a nuestra sucursal para avanzar con la operación.
+
+Concesionaria Oficial.

@@ -10,6 +10,7 @@ module Api
         appraisal = current_user.appraisals.new(appraisal_params)
 
         if appraisal.save
+          AppraisalMailer.received_email(appraisal).deliver_later if appraisal.user&.email.present?
           render json: serialize(appraisal), status: :created
         else
           render json: { errors: appraisal.errors.full_messages }, status: :unprocessable_entity

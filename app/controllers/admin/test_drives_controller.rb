@@ -33,6 +33,7 @@ module Admin
 
     def confirm
       if @test_drive.confirmed!
+        TestDriveMailer.status_update_email(@test_drive).deliver_later
         redirect_to admin_test_drives_path(status: params[:current_status]), notice: "Test Drive ##{@test_drive.id} confirmado."
       else
         redirect_to admin_test_drives_path, alert: "No se pudo confirmar el Test Drive."
@@ -41,6 +42,7 @@ module Admin
 
     def cancel
       if @test_drive.cancelled!
+        TestDriveMailer.status_update_email(@test_drive).deliver_later
         redirect_to admin_test_drives_path(status: params[:current_status]), notice: "Test Drive ##{@test_drive.id} cancelado."
       else
         redirect_to admin_test_drives_path, alert: "No se pudo cancelar el Test Drive."

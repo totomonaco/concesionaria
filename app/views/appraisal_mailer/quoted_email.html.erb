@@ -1,0 +1,36 @@
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #334155; line-height: 1.6;">
+  <div style="background-color: #0284c7; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
+    <h2 style="margin: 0; font-size: 22px;">¡Cotización Lista!</h2>
+  </div>
+  
+  <div style="padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px; background-color: #ffffff;">
+    <p>Hola <strong><%= @user&.name || "Cliente" %></strong>,</p>
+    
+    <p>Nuestros tasadores han analizado tu vehículo y definieron la siguiente propuesta económica:</p>
+    
+    <div style="background-color: #f0fdf4; border: 2px solid #86efac; padding: 18px; margin: 20px 0; border-radius: 8px; text-align: center;">
+      <span style="font-size: 13px; color: #166534; font-weight: bold; text-transform: uppercase;">Monto tasado ofrecido</span>
+      <div style="font-size: 28px; font-weight: bold; color: #15803d; margin: 6px 0;">
+        $<%= number_with_delimiter(@appraisal.quoted_price.to_i) %>
+      </div>
+      <div style="font-size: 15px; color: #374151;">
+        para tu <strong><%= @appraisal.car_title %></strong>
+      </div>
+    </div>
+
+    <% if @appraisal.admin_notes.present? %>
+      <div style="background-color: #f8fafc; border-left: 4px solid #0284c7; padding: 14px; margin: 15px 0; border-radius: 4px;">
+        <strong style="display: block; color: #0f172a; margin-bottom: 4px;">Observaciones del perito:</strong>
+        <p style="margin: 0; font-size: 14px; color: #475569;"><%= @appraisal.admin_notes %></p>
+      </div>
+    <% end %>
+
+    <p style="font-size: 14px; color: #64748b; margin-top: 20px;">
+      Podés acercarte a nuestra sucursal con la documentación para avanzar con la inspección física y firma del boleto.
+    </p>
+    
+    <p style="margin-top: 30px; font-size: 14px; color: #94a3b8; text-align: center;">
+      Concesionaria Oficial • Sistema de Gestión de Vehículos
+    </p>
+  </div>
+</div>
