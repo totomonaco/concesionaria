@@ -1,13 +1,13 @@
 puts "Creando marcas y modelos..."
 
 brands_and_models = {
-  "Toyota" => ["Corolla", "Hilux", "Yaris", "Etios", "RAV4", "SW4"],
-  "Ford" => ["Focus", "Ranger", "Territory", "Ka", "Fiesta"],
-  "Volkswagen" => ["Golf GTI", "Amarok", "Polo", "Vento", "T-Cross", "Nivus"],
-  "Chevrolet" => ["Cruze", "Onix", "Tracker", "S10", "Spin"],
-  "Peugeot" => ["208", "2008", "3008", "Partner"],
-  "Fiat" => ["Cronos", "Toro", "Pulse", "Mobi", "Strada"],
-  "Honda" => ["Civic", "HR-V", "CR-V", "Fit"]
+  "Toyota" => [ "Corolla", "Hilux", "Yaris", "Etios", "RAV4", "SW4" ],
+  "Ford" => [ "Focus", "Ranger", "Territory", "Ka", "Fiesta" ],
+  "Volkswagen" => [ "Golf GTI", "Amarok", "Polo", "Vento", "T-Cross", "Nivus" ],
+  "Chevrolet" => [ "Cruze", "Onix", "Tracker", "S10", "Spin" ],
+  "Peugeot" => [ "208", "2008", "3008", "Partner" ],
+  "Fiat" => [ "Cronos", "Toro", "Pulse", "Mobi", "Strada" ],
+  "Honda" => [ "Civic", "HR-V", "CR-V", "Fit" ]
 }
 
 brands_and_models.each do |brand_name, models|
@@ -57,4 +57,3 @@ if corolla_model && Vehicle.where(vehicle_model: corolla_model).none?
     td.status = :pending
   end
 end
-

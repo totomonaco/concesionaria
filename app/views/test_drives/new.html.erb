@@ -16,7 +16,6 @@
   <% end %>
 
   <%= form_with model: @test_drive, url: test_drives_path, local: true do |f| %>
-    <!-- Selección o detalle del Vehículo -->
     <div style="margin-bottom: 20px;">
       <% if @vehicle %>
         <%= f.hidden_field :vehicle_id, value: @vehicle.id %>
@@ -39,7 +38,6 @@
       <% end %>
     </div>
 
-    <!-- Datos del Cliente -->
     <div style="display: flex; gap: 15px; margin-bottom: 20px;">
       <div style="flex: 1;">
         <label style="display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;">Tu Nombre completo *</label>
@@ -53,7 +51,6 @@
       </div>
     </div>
 
-    <!-- Fecha y Horario deseado -->
     <div style="display: flex; gap: 15px; margin-bottom: 25px;">
       <div style="flex: 1;">
         <%= f.label :scheduled_date, "Fecha preferida *", style: "display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px;" %>

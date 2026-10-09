@@ -4,7 +4,6 @@ class Appraisal < ApplicationRecord
 
   enum :status, {
     pending:  "pending",
-    reviewed: "reviewed",
     quoted:   "quoted",
     rejected: "rejected"
   }, default: "pending"
@@ -25,7 +24,6 @@ class Appraisal < ApplicationRecord
   def status_name
     case status
     when "pending"  then "Pendiente"
-    when "reviewed" then "En revisión"
     when "quoted"   then "Cotizado"
     when "rejected" then "Rechazado"
     end

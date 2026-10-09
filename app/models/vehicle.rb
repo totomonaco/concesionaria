@@ -11,7 +11,7 @@ class Vehicle < ApplicationRecord
   enum :currency, { ars: "ars", usd: "usd" }, default: "ars"
   enum :status, { available: 0, reserved: 1, sold: 2 }, default: :available
 
-  scope :available_for_sale, -> { where(status: [:available, :reserved]) }
+  scope :available_for_sale, -> { where(status: [ :available, :reserved ]) }
   scope :by_status, ->(s) { where(status: s) if s.present? && s != "all" }
   scope :by_condition, ->(c) {
     case c.to_s.downcase
@@ -27,9 +27,9 @@ class Vehicle < ApplicationRecord
   end
 
   validates :vehicle_model, presence: { message: "debe seleccionarse" }
-  validates :year, presence: { message: "no puede estar en blanco" }, 
+  validates :year, presence: { message: "no puede estar en blanco" },
                    numericality: { greater_than: 1980, less_than_or_equal_to: Date.current.year + 1, message: "debe ser un año válido" }
-  validates :price, presence: { message: "no puede estar en blanco" }, 
+  validates :price, presence: { message: "no puede estar en blanco" },
                     numericality: { greater_than: 0, message: "debe ser mayor a 0" }
   validates :km, presence: { message: "no puede estar en blanco" },
                  numericality: { greater_than_or_equal_to: 0, message: "debe ser mayor o igual a 0" }

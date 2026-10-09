@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       resources :vehicles,    only: %i[index show]
       resources :test_drives, only: %i[index create]
       resources :appraisals,  only: %i[index create]
-      get    "profile",     to: "profile#show"
+      get "profile",     to: "profile#show"
     end
   end
 

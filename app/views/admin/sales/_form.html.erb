@@ -10,7 +10,6 @@
     </div>
   <% end %>
 
-  <!-- Selección de Vehículo -->
   <div style="margin-bottom: 20px;">
     <% if @vehicle %>
       <%= f.hidden_field :vehicle_id, value: @vehicle.id %>
@@ -34,7 +33,6 @@
     <% end %>
   </div>
 
-  <!-- Selección o Carga de Cliente -->
   <div style="margin-bottom: 20px; border: 1px solid #e5e7eb; padding: 15px; border-radius: 6px; max-width: 550px; background-color: #f8fafc;">
     <label style="font-weight: bold; display: block; margin-bottom: 8px;">Cliente Comprador</label>
 
@@ -63,7 +61,6 @@
     </div>
   </div>
 
-  <!-- Condiciones Comerciales (Precio, Moneda, Medio de Pago) -->
   <div style="display: flex; gap: 15px; max-width: 550px; margin-bottom: 15px;">
     <div style="flex: 2;">
       <%= f.label :price, "Precio final acordado *", style: "font-weight: bold; display: block; margin-bottom: 5px;" %>
