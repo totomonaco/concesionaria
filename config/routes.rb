@@ -16,6 +16,7 @@ Rails.application.routes.draw do
       post   "sessions",      to: "sessions#create"
       delete "sessions",      to: "sessions#destroy"
       post   "registrations", to: "registrations#create"
+      resources :brands,      only: %i[index]
       resources :vehicles,    only: %i[index show]
       resources :test_drives, only: %i[index create]
       resources :appraisals,  only: %i[index create]
